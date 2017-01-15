@@ -7,7 +7,7 @@
 			<div class="col-sm-12">
 				<div class="panel panel-default">
 	                <div class="panel-heading">
-	                    <h2 class="panel-title">Detail Pelapor</h2>
+	                    <h2 class="panel-title">Detail Pelanggan</h2>
 	                </div>
 	                <div class="panel-body">
 	                    <table class="table table-striped">
@@ -33,43 +33,64 @@
 			</div>
 		</div>
 
-		<div class="row">
-            <div class="col-sm-12">
-                <div class="card-box table-responsive">
-                    <h4 class="m-t-0 header-title"><b>Points</b></h4>
-                    <p>
-                    	<a href="{{ route('admin.customer.point.create', $customer->id) }}" class="btn btn-primary">Tambah/Tukar Point</a>
-                    	<button class="btn btn-primary pull-right">Saldo: {{ $balance->point_balance }}</button>
-                    </p>
-                    <table id="datatable" class="table table-striped table-bordered">
-                        <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>Tanggal</th>
-                            <th>Point In</th>
-                            <th>Point Out</th>
-                            <th>Point Balance</th>
-                        </tr>
-                        </thead>
+		@if (!count($point) == 0)
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h2 class="panel-title">Point</h2>
+                        </div>
+                        <p>
+                            <a href="{{ route('admin.customer.point.create', $customer->id) }}" class="btn btn-primary">Tambah/Tukar Point</a>
+                            <button class="btn btn-primary pull-right">Saldo: {{ $balance->point_balance }}</button>
+                        </p>
+                        <div class="panel-body">
+                            <table id="datatable" class="table table-striped table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Tanggal</th>
+                                    <th>Point In</th>
+                                    <th>Point Out</th>
+                                    <th>Point Balance</th>
+                                </tr>
+                                </thead>
 
 
-                        <tbody>
-                        @php $x = 0 @endphp
-                        @foreach ($point as $data)
-                        @php $x++ @endphp
-                            <tr>
-                                <td>{{ $x }}</td>
-                                <td>{{ $data->created_at }}</td>
-                                <td>{{ $data->point_in }}</td>
-                                <td>{{ $data->point_out }}</td>
-                                <td>{{ $data->point_balance }}</td>
-                            </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
+                                <tbody>
+                                @php $x = 0 @endphp
+                                @foreach ($point as $data)
+                                @php $x++ @endphp
+                                    <tr>
+                                        <td>{{ $x }}</td>
+                                        <td>{{ $data->created_at }}</td>
+                                        <td>{{ $data->point_in }}</td>
+                                        <td>{{ $data->point_out }}</td>
+                                        <td>{{ $data->point_balance }}</td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-        <!-- end row -->
+        @else
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h2 class="panel-title">Detail Point</h2>
+                        </div>
+                        <div class="panel-body">
+                            <p>
+                                <a href="{{ route('admin.customer.point.create', $customer->id) }}" class="btn btn-primary">Tambah/Tukar Point</a>
+                            </p>
+                            <p>Pelanggan belum memiliki point</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
 	</div>
 @stop

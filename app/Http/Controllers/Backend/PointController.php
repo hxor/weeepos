@@ -38,24 +38,57 @@ class PointController extends Controller
      */
     public function store(Request $request)
     {
-        $point = Point::where('customer_id', $request->customer_id)->orderBy('id', 'desc')->first();
+        // $point = Point::where('customer_id', $request->customer_id)->orderBy('id', 'desc')->first();
         if ($request->point_out == 0) {
-            $data = [
-                'customer_id' => $request->customer_id,
-                'point_in' => $request->point_in,
-                'point_balance' => $point->point_balance + $request->point_in
-            ];
-            Point::create($data);
-            notify()->flash('Berhasil!', 'success', [
-                'timer' => 1500,
-                'text' => 'Point berhasil ditambah',
-            ]);
+            if (!Point::where('customer_id', $request->customer_id)->exists()) {
+                $data = [
+                    'customer_id' => $request->customer_id,
+                    'point_in' => $request->point_in,
+                    'point_balance' => 0 + $request->point_in
+                ];  
+                
+                Point::create($data);
+                notify()->flash('Berhasil!', 'success', [
+                    'timer' => 1500,
+                    'text' => 'Point berhasil ditambah',
+                ]);
+            } else {
+                $point = Point::where('customer_id', $request->customer_id)->orderBy('id', 'desc')->first();
+                $data = [
+                    'customer_id' => $request->customer_id,
+                    'point_in' => $request->point_in,
+                    'point_balance' => $point->point_balance + $request->point_in
+                ];            
+                Point::create($data);
+                notify()->flash('Berhasil!', 'success', [
+                    'timer' => 1500,
+                    'text' => 'Point berhasil ditambah',
+                ]);
+            }
         } else {
+            if (!Point::where('customer_id', $request->customer_id)->exists()) {
+                notify()->flash('Gagal!', 'error', [
+                    'timer' => 2000,
+                    'text' => 'Pelanggan belum memiliki point',
+                ]);
+                return redirect()->route('admin.customer.show', $request->customer_id);
+            }
+
+            $point = Point::where('customer_id', $request->customer_id)->orderBy('id', 'desc')->first();
+            if ($point->point_balance < $request->point_out) {
+                notify()->flash('Gagal!', 'error', [
+                    'timer' => 2000,
+                    'text' => 'Point tidak mencukupi untuk ditukar',
+                ]);
+                return redirect()->route('admin.customer.show', $request->customer_id);
+            }
+
             $data = [
                 'customer_id' => $request->customer_id,
                 'point_out' => $request->point_out,
                 'point_balance' => $point->point_balance - $request->point_out
             ];
+            
             Point::create($data);
             notify()->flash('Berhasil!', 'success', [
                 'timer' => 1500,

@@ -24,13 +24,25 @@ class ApiController extends Controller
     	try {
     		if (Customer::where('code', $request->code)->where('phone', $request->phone)->exists()) {
     			$customer = Customer::where('code', $request->code)->first();
-    			$point = Point::where('customer_id', $customer->id)->get();
+                if (!Point::where('customer_id', $customer->id)->exists()) {
+                    $data = [
+                        'customer' => $customer,
+                        'point' => 0,
+                        'balance' => 0
+                    ];
+                    return response()->json([
+                        'status' => true,
+                        'message' => 'Akun belum memiliki Point',
+                        'data' => $data
+                    ]);
+                }
+                $point = Point::where('customer_id', $customer->id)->get();
                 $balance = Point::where('customer_id', $customer->id)->orderBy('id', 'desc')->select('point_balance')->first();
-    			$data = [
-    				'customer' => $customer,
-    				'point' => $point,
-    				'balance' => $balance->point_balance
-    			];
+                $data = [
+                    'customer' => $customer,
+                    'point' => $point,
+                    'balance' => $balance->point_balance
+                ];
                 return response()->json([
                     'status' => true,
                     'message' => 'berhasil',
