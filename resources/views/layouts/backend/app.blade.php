@@ -23,6 +23,10 @@
 
 				@yield('styles')
 
+                {{-- datatable --}}
+
+                <link href="{{ asset('back/plugins/datatables/jquery.dataTables.min.css') }}" rel="stylesheet" type="text/css"/>
+
 				<link href="{{ asset('back/plugins/sweetalert/sweetalert.css') }}" rel="stylesheet" type="text/css"/>
 
         <!-- HTML5 Shiv and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -99,7 +103,10 @@
     <script src="{{ asset('back/plugins/peity/jquery.peity.min.js') }}"></script>
     <script src="{{ asset('back/plugins/jquery-sparkline/jquery.sparkline.min.js') }}"></script>    
     <script src="{{ asset('back/pages/jquery.dashboard_3.js') }}"></script>
-
+    {{-- Datatable --}}
+    <script src="{{ asset('back/plugins/datatables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('back/plugins/datatables/dataTables.bootstrap.js') }}"></script>
+    {{-- sweetalert --}}
     <script src="{{ asset('back/plugins/sweetalert/sweetalert.min.js') }}"></script>
 
     <script src="{{ asset('back/js/jquery.core.js') }}"></script>
@@ -107,6 +114,12 @@
     <script src="{{ asset('js/app.js') }}"></script>
 
 		@yield('scripts')
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#datatable').dataTable();
+        });
+        TableManageButtons.init();
+    </script>
 
 		@if (notify()->ready())
 			 <script>
