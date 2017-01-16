@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use App\Models\Point;
+use App\Models\Reward;
 use Validator;
 
 class ApiController extends Controller
@@ -27,7 +28,7 @@ class ApiController extends Controller
                 if (!Point::where('customer_id', $customer->id)->exists()) {
                     $data = [
                         'customer' => $customer,
-                        'point' => 0,
+                        'point' => [],
                         'balance' => 0
                     ];
                     return response()->json([
@@ -59,5 +60,22 @@ class ApiController extends Controller
                 'message' => 'System gagal'
             ]);
     	}
+    }
+
+    public function showReward(){
+        $reward = Reward::all();
+        if (count($reward) == 0) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Belum ada reward',
+            ]);
+            
+        } else {
+            return response()->json([
+                'status' => true,
+                'message' => 'Berhasil',
+                'data' => $reward
+            ]);
+        }
     }
 }

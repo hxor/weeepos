@@ -20,4 +20,5 @@ Route::get('/user', function (Request $request) {
 
 Route::group(['prefix' => 'v1', 'namespace' => 'Api'], function(){
     Route::post('login', 'ApiController@doLogin');
+    Route::get('reward', 'ApiController@showReward');
 });
